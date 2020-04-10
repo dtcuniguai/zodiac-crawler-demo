@@ -17,7 +17,7 @@ class CrawlerStar108 extends Command
      *
      * @var string
      */
-    protected $signature = 'test:hi';
+    protected $signature = 'crawler:zodiac';
 
     /**
      * The console command description.
