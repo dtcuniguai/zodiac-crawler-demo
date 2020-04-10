@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Service\CrawlerService;
 use Illuminate\Http\Request;
+use Laravel\Socialite\Facades\Socialite;
 
 class testController extends Controller
 {
@@ -16,10 +17,6 @@ class testController extends Controller
 
     public function test()
     {
-
-
-        dd('successful');
-
-
+        return Socialite::driver('google')->redirect();
     }
 }

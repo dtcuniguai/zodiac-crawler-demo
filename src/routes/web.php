@@ -19,3 +19,5 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/test', 'testController@test');
+Route::get('/today', 'DailyZodiacController@today');
+Route::get('/yesterday', 'DailyZodiacController@yesterday');

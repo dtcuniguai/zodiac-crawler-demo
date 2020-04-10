@@ -35,4 +35,16 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'github' => [
+        'client_id' => 'your-github-app-id',
+        'client_secret' => 'your-github-app-secret',
+        'redirect' => 'http://your-callback-url',
+    ],
+
+    'google' => [
+        'client_id'     => '600695719716-gblh6e6g6pv4hp9cvl04h65dch9do9r6.apps.googleusercontent.com',
+        'client_secret' => '0P0Gn-vh_QstlfMsBlPGoLU1',
+        'redirect'      => 'http://google.com',
+    ],
+
 ];
