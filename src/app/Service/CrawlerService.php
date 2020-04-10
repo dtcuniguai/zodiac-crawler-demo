@@ -3,12 +3,19 @@
 namespace App\Service;
 
 
+use App\Repository\DailyZodiacRepository;
 use Symfony\Component\DomCrawler\Crawler;
 
 class CrawlerService
 {
+    private $zodiacRpy;
 
-    public function getUrlContent($url) : string
+    public function __construct(DailyZodiacRepository $dailyZodiacRepository)
+    {
+        $this->zodiacRpy = $dailyZodiacRepository;
+    }
+
+    public function getUrlContent($url): string
     {
         $client = new \GuzzleHttp\Client();
         $response = $client->request('GET', $url);
@@ -22,7 +29,7 @@ class CrawlerService
         return $homePageBody;
     }
 
-    public function getRedirectStarContent($url) : string
+    public function getRedirectStarContent($url): string
     {
         $crawler = new Crawler();
         $client = new \GuzzleHttp\Client();
@@ -37,11 +44,11 @@ class CrawlerService
         $target = $crawler->filter('script')->html();
 
         $preg = '/http:\/\/([a-z]|[0-9]|[A-Z]|.)*/';
-        preg_match($preg, $target, $tmp);
-        return $tmp[0];
+        preg_match($preg, $target, $url);
+        return $url[0];
     }
 
-    public function getStarUrlNodes($content) : array
+    public function getStarUrlNodes($content): array
     {
         $crawler = new Crawler();
         $stars = array();
@@ -57,22 +64,69 @@ class CrawlerService
     public function parseStarNode($content)
     {
         $crawler = new Crawler();
-        $stars = array();
         $crawler->addHtmlContent($content);
-        //parse TODAY_FORTUNE
-        $target = $crawler->filterXPath('//div[contains(@class, "STARBABY")]')->html();
-        //parse FORTUNE_CONTENT
-        dd($target);
+//      parse TODAY_FORTUNE
+        //$target = $crawler->filterXPath('//div[contains(@class, "STARBABY")]')->html();
+//      parse FORTUNE_CONTENT
+        $zodiac = $this->parseCommentBlock($crawler->filterXPath('//div[contains(@class, "FORTUNE_BG")]'));
+        return $zodiac;
     }
 
-    private function parseZodiacBlock()
+    public function newDailyZodiac($form)
+    {
+        return $this->zodiacRpy->newDailyZodiac($form);
+    }
+
+    //more info expansion in future
+    private function parseZodiacBlock($crawler)
     {
 
     }
 
-    private function parseCommentBlock()
+    private function parseCommentBlock(Crawler $crawler)
     {
+        $parsers = array();
+        $form = array();
+        $content = $crawler->filterXPath('//div[contains(@class, "TODAY_CONTENT")]');
+//        parse zodiac
+        $form['zodiac'] = preg_replace('/(今日|解析)/', '',$content->filter('h3')->html());
+//        parse comment
+        $content->filter('p')->each(function ($node) use (&$parsers) {
+            $f = $node->filter('span');
+            if ($f->getNode(0)) {
+                $parser = preg_split('/★/', $f->html());
+                array_push($parsers, $parser[0]);
+                array_push($parsers, count($parser) - 1);
+            } else {
+                array_push($parsers, $node->html());
+            }
+        });
 
+        for ($i = 0; $i < count($parsers); $i += 3) {
+            switch ($parsers[$i]) {
+                case "整體運勢":
+                    $title = 'total';
+                    break;
+                case "愛情運勢":
+                    $title = 'love';
+                    break;
+                case "事業運勢":
+                    $title = 'business';
+                    break;
+                case "財運運勢":
+                    $title = 'fortune';
+                    break;
+                default:
+                    $title = null;
+                    break;
+            }
+
+            if($title) {
+                $form[$title.'_score'] = $parsers[$i+1];
+                $form[$title.'_comment'] = $parsers[$i+2];
+            }
+        }
+        return $form;
     }
 
 

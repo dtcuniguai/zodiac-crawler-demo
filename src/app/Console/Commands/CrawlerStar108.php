@@ -45,13 +45,11 @@ class CrawlerStar108 extends Command
     public function handle()
     {
         $content = $this->crawlerSrv->getUrlContent('http://astro.click108.com.tw/');
-        $doms = $this->crawlerSrv->getStarUrlNodes($content);
-        dd($doms);
-//        $crawler = new Crawler($homePageBody);
-
-//        dd($crawler->filterXPath('//div[contains(@class, "STAR12_BOX")]'));
-//        foreach ($crawler as $domElement) {
-//            echo $domElement->nodeName;
-//        }
+        $starUrls = $this->crawlerSrv->getStarUrlNodes($content);
+        foreach ($starUrls as $url) {
+            $starContent = $this->crawlerSrv->getUrlContent($this->crawlerSrv->getRedirectStarContent($url));
+            $zodiac = $this->crawlerSrv->parseStarNode($starContent);
+            $this->crawlerSrv->newDailyZodiac($zodiac);
+        }
     }
 }

@@ -16,10 +16,10 @@ class testController extends Controller
 
     public function test()
     {
-        $content = $this->crawlerSrv->getUrlContent('http://astro.click108.com.tw/');
-        $starUrls = $this->crawlerSrv->getStarUrlNodes($content);
-        $starContent = $this->crawlerSrv->getUrlContent($this->crawlerSrv->getRedirectStarContent($starUrls[0]));
-        dd($this->crawlerSrv->parseStarNode($starContent));
+
+
+        dd('successful');
+
 
     }
 }
