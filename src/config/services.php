@@ -44,7 +44,7 @@ return [
     'google' => [
         'client_id'     => '600695719716-gblh6e6g6pv4hp9cvl04h65dch9do9r6.apps.googleusercontent.com',
         'client_secret' => '0P0Gn-vh_QstlfMsBlPGoLU1',
-        'redirect'      => 'http://google.com',
+        'redirect'      => 'http://b526c26a.ngrok.io/auth/google/callback',
     ],
 
 ];
