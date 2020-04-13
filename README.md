@@ -48,3 +48,21 @@
 - show today's Zodiac
 
 ![](https://i.imgur.com/e6WCPUa.png)
+
+
+### Socialite Login
+
+- using ngrok at local
+
+- google oauth setting
+
+![](https://i.imgur.com/xgzAzFh.png)
+
+- google login at login page
+![](https://i.imgur.com/pOMfPRh.png)
+
+![](https://i.imgur.com/lzbRCVM.png)
+
+- login success
+
+![](https://i.imgur.com/ZCzzJ4c.png)
